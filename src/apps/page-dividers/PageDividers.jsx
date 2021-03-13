@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useLocalStorage from '../../hooks/use-local-storage';
-import useDocumentTitle from '../../hooks/use-document-title';
+import { useDocumentTitle, useLocalStorage } from 'xooks';
 import Settings from './Settings/Settings';
 import Output from './Output/Output';
 import Preview from './Preview/Preview';
@@ -15,7 +14,7 @@ const INITIAL_VALUES = {
 };
 
 export default function PageDividers() {
-  useDocumentTitle('Curved page dividers');
+  useDocumentTitle('Page dividers');
 
   const ls = useLocalStorage({ key: '@omatsuri/page-dividers', delay: 1000 });
   const initialValues = ls.retrieve() || INITIAL_VALUES;
@@ -29,6 +28,7 @@ export default function PageDividers() {
 
   useEffect(() => {
     ls.save({ direction, width, height, color, position, type });
+    return ls.cancel;
   }, [direction, width, height, color, position, type]);
 
   const values = { type, color, width, height, position, direction };

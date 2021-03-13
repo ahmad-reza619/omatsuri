@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
+import { useTheme } from '../../../ThemeProvider';
 import SliderInput from '../../../components/SliderInput/SliderInput';
 import Background from '../../../components/Background/Background';
 import Button from '../../../components/Button/Button';
@@ -14,11 +16,13 @@ export default function Settings({
   onAllRemove,
   canRemove,
 }) {
+  const [theme] = useTheme();
+
   return (
-    <Background className={classes.wrapper}>
+    <Background className={cx(classes.wrapper, classes[theme])}>
       <div className={classes.settings}>
         <div className={classes.settingsControl}>
-          <div className={classes.label}>Darken by, %</div>
+          <div className={classes.label}>Darken/lighten by, %</div>
           <SliderInput
             value={Math.round(darken * 100)}
             onChange={(value) => onDarkenChange(value / 100)}
@@ -28,12 +32,12 @@ export default function Settings({
         </div>
 
         <div className={classes.settingsControl}>
-          <div className={classes.label}>Desaturate by, %</div>
+          <div className={classes.label}>Saturation shift, %</div>
           <SliderInput
             value={Math.round(saturation * 100)}
             onChange={(value) => onSaturationChange(value / 100)}
-            min={1}
-            max={100}
+            min={-50}
+            max={50}
           />
         </div>
       </div>

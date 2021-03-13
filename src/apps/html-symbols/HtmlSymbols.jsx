@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
-import symbols from '../../data/symbols';
-import useLocaStorage from '../../hooks/use-local-storage';
-import useClipboard from '../../hooks/use-clipboard';
-import useDocumentTitle from '../../hooks/use-document-title';
+import { useDocumentTitle, useLocalStorage, useClipboard } from 'xooks';
+import { useTheme } from '../../ThemeProvider';
 import Background from '../../components/Background/Background';
 import Tabs from '../../components/Tabs/Tabs';
 import Input from '../../components/Input/Input';
+import symbols from './symbols';
 import classes from './HtmlSymbols.styles.less';
 
 const typesData = Object.keys(symbols).map((tab) => ({ value: tab, label: tab }));
@@ -26,9 +25,10 @@ function searchSymbols(query, type) {
 export default function HtmlSymbols() {
   useDocumentTitle('Symbols collection');
 
+  const [theme] = useTheme();
   const clipboard = useClipboard({ timeout: 1000 });
-  const lsQuery = useLocaStorage({ key: '@omatsuri/html-symbols/search', delay: 200 });
-  const lsType = useLocaStorage({ key: '@omatsuri/html-symbols/type', delay: 200 });
+  const lsQuery = useLocalStorage({ key: '@omatsuri/html-symbols/search', delay: 200 });
+  const lsType = useLocalStorage({ key: '@omatsuri/html-symbols/type', delay: 200 });
   const [query, setQuery] = useState(lsQuery.retrieve() || '');
   const [type, setType] = useState(lsType.retrieve() || 'Most used');
 
@@ -74,7 +74,7 @@ export default function HtmlSymbols() {
   ));
 
   return (
-    <Background className={classes.wrapper}>
+    <Background className={cx(classes.wrapper, classes[theme])}>
       <div className={classes.inputWrapper}>
         <Tabs data={typesData} active={type} onTabChange={handleTypeChange} />
         <Input

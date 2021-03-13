@@ -1,17 +1,15 @@
 import React, { useState, useLayoutEffect } from 'react';
+import { useDocumentTitle, useLocalStorage } from 'xooks';
 import SvgInput from '../../components/SvgInput/SvgInput';
-import useDocumentTitle from '../../hooks/use-document-title';
-import useLocalStorage from '../../hooks/use-local-storage';
-import useSvgProcessor from '../../hooks/use-svg-processor';
 import Svg2jsxWorker from '../../workers/svg-to-jsx.worker';
+import processSvgFile from '../../utils/process-svg-file';
 import Output from './Output/Output';
 
 const svg2jsx = new Svg2jsxWorker();
 
 export default function SvgToJsx() {
-  useDocumentTitle('Svg to jsx');
+  useDocumentTitle('SVG to JSX');
 
-  const svgProcessor = useSvgProcessor();
   const ls = useLocalStorage({ key: '@omatsuri/svg-to-jsx', delay: 1000 });
   const transmittedValue = useLocalStorage({ key: '@omatsuri/conversion-after-compression/jsx' });
   const [value, setValue] = useState(transmittedValue.retrieveAndClean() || ls.retrieve() || '');
@@ -43,7 +41,7 @@ export default function SvgToJsx() {
 
   const handleFilesDrop = (files) => {
     if (files.length > 0) {
-      svgProcessor(files[0]).then((file) => handleChange(file.text));
+      processSvgFile(files[0]).then((file) => handleChange(file.text));
     }
   };
 
@@ -54,7 +52,7 @@ export default function SvgToJsx() {
         onChange={handleChange}
         errors={result.error && value.trim().length > 0 ? ['input file'] : []}
         onFilesDrop={handleFilesDrop}
-        dropLabel="Drop svg file to browser window to optimize it and convert it to jsx"
+        dropLabel="Drop an SVG file to the browser window to optimize it and convert it to JSX"
       />
 
       <Output data={result} />

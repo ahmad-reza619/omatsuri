@@ -31,12 +31,6 @@
   }
 }
 
-.icon {
-  opacity: 0.6;
-  width: 22px;
-  height: 22px;
-}
-
 .angle {
   width: 18px;
   height: 18px;
@@ -57,4 +51,24 @@
   height: @cell-size;
   background-color: @oc-gray-0;
   border-radius: 5px;
+}
+
+.dark {
+  .blank {
+    background-color: @oc-gray-8;
+  }
+
+  .control {
+    background-color: @oc-gray-7;
+    color: @oc-gray-4;
+    border-color: @oc-gray-8;
+
+    &:hover {
+      background-color: @oc-gray-8;
+    }
+  }
+
+  .active {
+    background-color: @oc-blue-8;
+  }
 }

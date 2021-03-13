@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
+import { useTheme } from '../../ThemeProvider';
 import Navbar from '../Navbar/Navbar';
 import classes from './AppContainer.styles.less';
 
 export default function AppContainer({ children }) {
+  const [theme] = useTheme();
+
   return (
-    <div className={classes.appContainer}>
-      <Navbar className={classes.navbar} />
+    <div className={cx(classes.appContainer, classes[theme])}>
+      <Navbar />
       <main className={classes.main}>{children}</main>
     </div>
   );

@@ -1,9 +1,8 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import useLocalStorage from '../../hooks/use-local-storage';
-import useSvgProcessor from '../../hooks/use-svg-processor';
-import useDocumentTitle from '../../hooks/use-document-title';
+import { useLocalStorage, useDocumentTitle } from 'xooks';
 import SvgInput from '../../components/SvgInput/SvgInput';
 import SvgoWorker from '../../workers/svgo.worker';
+import processSvgFile from '../../utils/process-svg-file';
 import formatFileName from './format-file-name';
 import Output from './Output/Output';
 
@@ -16,9 +15,8 @@ const INITIAL_PROGRESS_STATE = {
 };
 
 export default function SvgCompressor() {
-  useDocumentTitle('Svg compressor');
+  useDocumentTitle('SVG compressor');
 
-  const svgProcessor = useSvgProcessor();
   const ls = useLocalStorage({ key: '@omatsuri/svg-compressor', delay: 500 });
   const [value, setValue] = useState(ls.retrieve() || '');
   const [results, setResults] = useState({});
@@ -58,7 +56,7 @@ export default function SvgCompressor() {
 
   const handleFilesDrop = (files) => {
     incrementQueue();
-    Promise.all(files.map((file) => svgProcessor(file))).then((filesData) => {
+    Promise.all(files.map((file) => processSvgFile(file))).then((filesData) => {
       setResults((current) =>
         filesData.reduce(
           (acc, fileData, index) => {
@@ -98,7 +96,7 @@ export default function SvgCompressor() {
         errors={errors}
         onFilesDrop={handleFilesDrop}
         formatFileName={formatFileName}
-        dropLabel="Drop one or more svg files to start compression"
+        dropLabel="Drop one or more SVG files to start compression"
       />
       <Output results={results} />
     </>

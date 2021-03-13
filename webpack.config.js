@@ -7,15 +7,41 @@ const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CnameWebpackPlugin = require('cname-webpack-plugin');
-const PrerenderSPAPlugin = require('prerender-spa-plugin');
-const babelrc = require('./.babelrc');
-const toolsLinks = require('./src/data/tools-links');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
+const OfflinePlugin = require('offline-plugin');
+const { argv } = require('yargs');
+const babelrc = require('./.babelrc');
+
+const { analyze } = argv;
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const port = 8262;
 const entry = path.join(__dirname, './src/index.jsx');
 const output = path.join(__dirname, './dist');
 const publicPath = '/';
+
+const templateContent = ({ htmlWebpackPlugin }) => `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      ${htmlWebpackPlugin.tags.headTags}
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Progressive Web Application with 12 open source frontend focused tools">
+      <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+      <title>Omatsuri</title>
+    </head>
+    <body>
+      <noscript>
+        Enable JavaScript to use Omatsuri
+      </noscript>
+
+      <div id="app"></div>
+      ${htmlWebpackPlugin.tags.bodyTags}
+    </body>
+  </html>
+`;
 
 module.exports = {
   mode,
@@ -80,7 +106,7 @@ module.exports = {
       },
 
       {
-        test: /\.(less|css)$/,
+        test: /\.(less)$/,
         use: [
           mode === 'production'
             ? {
@@ -104,10 +130,26 @@ module.exports = {
           {
             loader: 'less-loader',
             options: {
-              prependData: "@import 'open-color/open-color.less';",
+              additionalData: "@import 'open-color/open-color.less';",
             },
           },
           ...(mode === 'production' ? ['postcss-loader'] : []),
+        ],
+      },
+
+      {
+        test: /\.(css)$/,
+        use: [
+          mode === 'production'
+            ? {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                publicPath,
+              },
+            }
+            : 'style-loader',
+          'css-loader',
+          'postcss-loader',
         ],
       },
 
@@ -136,40 +178,18 @@ module.exports = {
         windows: false,
       },
     }),
-    new HtmlWebpackPlugin({
-      templateContent: ({ htmlWebpackPlugin }) => `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            ${htmlWebpackPlugin.tags.headTags}
-            <meta charset="utf-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Omatsuri</title>
-          </head>
-          <body>
-            <noscript>
-              Enable JavaScript to use Frontend toolbox
-            </noscript>
-
-            <div id="app"></div>
-            ${htmlWebpackPlugin.tags.bodyTags}
-          </body>
-        </html>
-      `,
-    }),
+    new HtmlWebpackPlugin({ templateContent }),
+    new HtmlWebpackPlugin({ filename: '404.html', templateContent }),
     ...(mode !== 'production'
       ? [
         new webpack.HotModuleReplacementPlugin(),
         new OpenBrowserPlugin({ url: `http://localhost:${port}` }),
       ]
       : [
+        new BundleAnalyzerPlugin({ analyzerMode: analyze ? 'static' : 'disabled' }),
         new MiniCssExtractPlugin(),
         new CnameWebpackPlugin({ domain: 'omatsuri.app' }),
-        new PrerenderSPAPlugin({
-          staticDir: output,
-          routes: ['/', '/about', '/404', ...toolsLinks],
-        }),
+        new OfflinePlugin({ autoUpdate: true, appShell: '/', excludes: ['404.html', 'CNAME'] }),
       ]),
   ],
 };

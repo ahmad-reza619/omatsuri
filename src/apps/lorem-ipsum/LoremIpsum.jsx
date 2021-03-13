@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useLocalStorage from '../../hooks/use-local-storage';
-import useDocumentTitle from '../../hooks/use-document-title';
-import useClipboard from '../../hooks/use-clipboard';
+import { useDocumentTitle, useClipboard, useLocalStorage } from 'xooks';
 import generateText from './generate-text';
 import Settings from './Settings/Settings';
 import Preview from './Preview/Preview';
@@ -25,6 +23,7 @@ export default function LoremIpsum() {
   useEffect(() => {
     ls.save({ type, length });
     clipboard.reset();
+    return ls.cancel;
   }, [type, length]);
 
   const handleSubmit = () => {

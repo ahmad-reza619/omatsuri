@@ -1,25 +1,19 @@
 import React from 'react';
-import github from '../../../assets/social/github.svg';
-import telegram from '../../../assets/social/telegram.svg';
-import twitter from '../../../assets/social/twitter.svg';
-import settings from '../../../data/settings';
+import { useTheme } from '../../../ThemeProvider';
+import github from './icons/github.svg';
+import githubWhite from './icons/github-white.svg';
+import telegram from './icons/telegram.svg';
+import twitter from './icons/twitter.svg';
+import settings from '../../../settings';
 import classes from './Contributors.styles.less';
 
-// author: {
-//   avatar:
-//     'https://avatars0.githubusercontent.com/u/10353856?s=460&u=88394dfd67727327c1f7670a1764dc38a8a24831&v=4',
-//   name: 'Vitaly Rtishchev',
-//   tg: 'https://t.me/rtivital',
-//   github: 'rtivital',
-//   wetsite: 'https://github.com/rtivital',
-// },
-
 export default function Contributors() {
+  const [theme] = useTheme();
   const { author, contributors } = settings.maintainers;
 
   const contributorsItems = contributors.map((contributor, index) => (
     <div className={classes.author} key={index}>
-      <img className={classes.image} src={contributor.avatar} alt="" />
+      <img className={classes.image} src={contributor.avatar} alt={contributor.name} />
       <div className={classes.body}>
         <div className={classes.name}>
           <span>{contributor.name}</span>
@@ -40,33 +34,37 @@ export default function Contributors() {
           {contributor.github && (
             <a
               className={classes.socialLink}
-              href={contributor.github}
+              href={`https://github.com/${contributor.github}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img className={classes.icon} src={github} alt="" />
+              <img
+                className={classes.icon}
+                src={theme === 'light' ? github : githubWhite}
+                alt="Github logo"
+              />
             </a>
           )}
 
           {contributor.tg && (
             <a
               className={classes.socialLink}
-              href={contributor.tg}
+              href={`https://t.me/${contributor.tg}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img className={classes.icon} src={telegram} alt="" />
+              <img className={classes.icon} src={telegram} alt="Telegram logo" />
             </a>
           )}
 
           {contributor.twitter && (
             <a
               className={classes.socialLink}
-              href={contributor.twitter}
+              href={`https://twitter.com/${contributor.twitter}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img className={classes.icon} src={twitter} alt="" />
+              <img className={classes.icon} src={twitter} alt="Twitter logo" />
             </a>
           )}
         </div>
@@ -75,10 +73,10 @@ export default function Contributors() {
   ));
 
   return (
-    <div>
+    <div className={classes[theme]}>
       <h2>Contributors</h2>
       <div className={classes.author}>
-        <img className={classes.image} src={author.avatar} alt="" />
+        <img className={classes.image} src={author.avatar} alt="Vitaly Rtishchev" />
         <div className={classes.body}>
           <div className={classes.name}>
             <span>{author.name}</span>
@@ -95,20 +93,24 @@ export default function Contributors() {
           <div className={classes.social}>
             <a
               className={classes.socialLink}
-              href={author.github}
+              href={`https://github.com/${author.github}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img className={classes.icon} src={github} alt="" />
+              <img
+                className={classes.icon}
+                src={theme === 'light' ? github : githubWhite}
+                alt="Github logo"
+              />
             </a>
 
             <a
               className={classes.socialLink}
-              href={author.tg}
+              href={`https://t.me/${author.tg}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img className={classes.icon} src={telegram} alt="" />
+              <img className={classes.icon} src={telegram} alt="Telegram logo" />
             </a>
           </div>
         </div>

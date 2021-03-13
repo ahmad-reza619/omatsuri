@@ -5,9 +5,10 @@
   margin-left: 10px;
   position: sticky;
   top: 10px;
+  flex: 0 0 340px;
 
-  @media screen and (max-width: 400px) {
-    display: none;
+  @media screen and (max-width: 765px) {
+    flex: 0 0 100px;
   }
 }
 
@@ -29,6 +30,20 @@
 
 .logoImage {
   width: 200px;
+
+  @media screen and (max-width: 765px) {
+    display: none;
+  }
+}
+
+.logoImageSmall {
+  width: 40px;
+  height: 40px;
+  display: none;
+
+  @media screen and (max-width: 765px) {
+    display: block;
+  }
 }
 
 .linkBackground {
@@ -77,21 +92,30 @@
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 30px;
+
+  @media screen and (max-width: 765px) {
+    display: none;
+  }
 }
 
 .footerLinks {
   display: flex;
-  margin-bottom: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: -5px;
+  margin-bottom: 8px;
 }
 
-.dot,
 .footerLink {
   color: @oc-gray-6;
   text-decoration: none;
   font-size: 14px;
 
-  & + & {
-    margin-left: 8px;
+  &:not(:first-of-type)::before {
+    content: '•';
+    display: inline-block;
+    margin-left: 7px;
+    margin-right: 7px;
   }
 
   &:hover {
@@ -99,15 +123,67 @@
   }
 }
 
-.sw {
-  pointer-events: none;
+.label {
+  @media screen and (max-width: 765px) {
+    display: none;
+  }
 }
 
-.sw_ready {
-  color: @oc-green-7;
+.scrollbars {
+  height: calc(100vh - 336px) !important;
+
+  @media screen and (max-width: 765px) {
+    height: calc(100vh - 132px) !important;
+  }
 }
 
-.sw_disabled,
-.sw_error {
-  color: @oc-red-7;
+.offline {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: @oc-gray-6;
+}
+
+.offlineSeparator {
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+.offlineSuccess {
+  color: @oc-teal-7;
+}
+
+.themeControl {
+  margin-bottom: 15px;
+}
+
+.dark {
+  .link {
+    color: @oc-gray-5;
+  }
+
+  .linkActive {
+    color: @oc-gray-3;
+  }
+
+  .offlineDescription,
+  .footerLink {
+    color: @oc-gray-5;
+  }
+
+  .linkBackground {
+    background-color: @oc-black;
+  }
+
+  .footerLink {
+    color: @oc-gray-5;
+
+    &:hover {
+      &::before {
+        color: @oc-gray-5;
+      }
+
+      color: @oc-blue-4;
+    }
+  }
 }

@@ -53,6 +53,7 @@
 }
 
 .shade {
+  min-width: 70px;
   flex: 1;
   border: 1px solid @oc-gray-2;
   overflow: hidden;
@@ -111,4 +112,24 @@
   border-top: 1px solid @oc-gray-2;
   font-size: 12px;
   font-family: Monaco, monospace;
+}
+
+.dark {
+  .copyAll {
+    color: @oc-blue-4;
+  }
+
+  .remove {
+    color: @oc-red-4;
+  }
+
+  .shade {
+    border-color: @oc-gray-8;
+  }
+
+  .value {
+    background-color: @oc-gray-9;
+    border-top-color: @oc-gray-8;
+    color: @oc-gray-4;
+  }
 }

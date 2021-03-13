@@ -1,8 +1,7 @@
 import oc from 'open-color';
 import React, { useState, useEffect } from 'react';
 import { v4 } from 'uuid';
-import useLocaStorage from '../../hooks/use-local-storage';
-import useDocumentTitle from '../../hooks/use-document-title';
+import { useDocumentTitle, useLocalStorage } from 'xooks';
 import Button from '../../components/Button/Button';
 import ColorShadesList from './ColorShadesList/ColorShadesList';
 import Settings from './Settings/Settings';
@@ -17,14 +16,14 @@ const defaultPalette = Object.keys(oc)
 
 const INITIAL_VALUES = {
   value: [{ color: '#ffffff', key: v4() }],
-  saturation: 0.2,
+  saturation: -0.2,
   darken: 0.1,
 };
 
 export default function ColorShadesGenerator() {
   useDocumentTitle('Color shades generator');
 
-  const ls = useLocaStorage({ key: '@omatsuri', delay: 1000 });
+  const ls = useLocalStorage({ key: '@omatsuri', delay: 1000 });
   const initialValues = ls.retrieve() || INITIAL_VALUES;
 
   const [value, setValue] = useState(initialValues.value);
@@ -53,6 +52,7 @@ export default function ColorShadesGenerator() {
 
   useEffect(() => {
     ls.save({ value, saturation, darken });
+    return ls.cancel;
   }, [value, saturation, darken]);
 
   const colors = value.map((color, index) => (

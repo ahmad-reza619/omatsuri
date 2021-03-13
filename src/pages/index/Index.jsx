@@ -1,16 +1,19 @@
 import React from 'react';
-import ToolCard from '../../components/ToolCard/ToolCard';
+import { useDocumentTitle } from 'xooks';
+import ToolCard from './ToolCard/ToolCard';
 import PageBase from '../../components/PageBase/PageBase';
-import toolsData from '../../data/tools';
+import settings from '../../settings';
 import classes from './Index.styles.less';
 
 export default function Index() {
-  const tools = toolsData.map((tool) => (
+  useDocumentTitle('Omatsuri');
+
+  const tools = settings.tools.map((tool) => (
     <ToolCard className={classes.tool} key={tool.name} {...tool} />
   ));
 
   return (
-    <PageBase className={classes.wrapper}>
+    <PageBase>
       <div className={classes.tools}>{tools}</div>
     </PageBase>
   );
